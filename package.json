@@ -1,6 +1,6 @@
 {
-  "name": "usgs-vue",
-  "version": "1.0.0",
+  "name": "@usgs/vue-component-library",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/usgs-vue.ssr.js",
   "browser": "dist/usgs-vue.esm.js",
@@ -8,7 +8,7 @@
   "unpkg": "dist/usgs-vue.min.js",
   "files": [
     "dist/*",
-    "src/**/*.vue"
+    "src/*"
   ],
   "sideEffects": false,
   "scripts": {
