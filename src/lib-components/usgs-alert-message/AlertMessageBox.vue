@@ -1,6 +1,6 @@
 <script>
-import UsaButton from '@/components/USWDS/Button/Button'
-import WudsModal from '@/components/Modal'
+import UsaButton from "@/lib-components/uswds-button";
+import WudsModal from "@/lib-components/usgs-modal";
 
 export default {
   components: {
@@ -10,11 +10,11 @@ export default {
   props: {
     title: {
       type: String,
-      default: '',
+      default: "",
     },
     message: {
       type: String,
-      default: '',
+      default: "",
     },
     subscriptionId: {
       type: String,
@@ -22,23 +22,23 @@ export default {
     },
   },
   data() {
-    return {}
+    return {};
   },
   methods: {
     openModal() {
-      this.$refs['alert-modal-id'].openModal()
-      this.$emit('opened-alert-message-box', {
+      this.$refs["alert-modal-id"].openModal();
+      this.$emit("opened-alert-message-box", {
         subscription: this.subscriptionId,
-      })
+      });
     },
     modalOkay() {
-      this.$refs['alert-modal-id'].closeModal()
-      this.$emit('closed-alert-message-box', {
+      this.$refs["alert-modal-id"].closeModal();
+      this.$emit("closed-alert-message-box", {
         subscription: this.subscriptionId,
-      })
+      });
     },
   },
-}
+};
 </script>
 
 <template>
@@ -48,7 +48,14 @@ export default {
       {{ message }}
     </template>
     <template v-slot:footer>
-      <UsaButton tabindex="0" className="ok-btn" variant="default" color="default" @click="modalOkay">OK</UsaButton>
+      <UsaButton
+        tabindex="0"
+        className="ok-btn"
+        variant="default"
+        color="default"
+        @click="modalOkay"
+        >OK</UsaButton
+      >
     </template>
   </WudsModal>
 </template>

@@ -44,40 +44,40 @@
       }
  *
  */
-import { KEY_ENTER } from '@/lib/commonKeyCodes'
+import { KEY_ENTER } from "@/commonKeyCodes";
 
 export default {
-  name: 'usa-primary-nav',
+  name: "usa-primary-nav",
   props: {
     options: {
       type: Object,
       required: true,
     },
   },
-  emits: ['search-input', 'search-submit'],
+  emits: ["search-input", "search-submit"],
   methods: {
     searchFormInput(event, id) {
-      this.$emit('search-input', {
+      this.$emit("search-input", {
         id,
         event,
-      })
+      });
     },
     searchFormKeyDown(event, id) {
       if (event.keyCode === KEY_ENTER) {
-        this.$emit('search-submit', {
+        this.$emit("search-submit", {
           id: id,
           event: event,
-        })
+        });
       }
     },
     searchFormSubmit(event, id) {
-      this.$emit('search-submit', {
+      this.$emit("search-submit", {
         id: id,
         event: event,
-      })
+      });
     },
   },
-}
+};
 </script>
 
 <template>
@@ -86,7 +86,11 @@ export default {
       <img src="~uswds/dist/img/close.svg" role="img" alt="close" />
     </button>
     <ul class="usa-nav__primary usa-accordion" aria-expanded="false">
-      <li class="usa-nav__primary-item" v-for="(option, index) in options.basic" :key="index">
+      <li
+        class="usa-nav__primary-item"
+        v-for="(option, index) in options.basic"
+        :key="index"
+      >
         <template v-if="option.type === 'menu'">
           <button
             class="usa-accordion__button usa-nav__link usa-current"
@@ -95,14 +99,28 @@ export default {
           >
             <span>{{ option.label }}</span>
           </button>
-          <ul :id="`basic-nav-section-${option.id}`" class="usa-nav__submenu" hidden>
-            <li class="usa-nav__submenu-item" v-for="(submenu, subindex) in option.subItems" :key="subindex">
-              <router-link :to="{ name: submenu.route }">{{ submenu.label }}</router-link>
+          <ul
+            :id="`basic-nav-section-${option.id}`"
+            class="usa-nav__submenu"
+            hidden
+          >
+            <li
+              class="usa-nav__submenu-item"
+              v-for="(submenu, subindex) in option.subItems"
+              :key="subindex"
+            >
+              <router-link :to="{ name: submenu.route }">{{
+                submenu.label
+              }}</router-link>
             </li>
           </ul>
         </template>
         <template v-if="option.type === 'link'">
-          <router-link class="usa-nav__link" :to="{ name: option.route }" :id="`usa-nav-link-${option.id}`">
+          <router-link
+            class="usa-nav__link"
+            :to="{ name: option.route }"
+            :id="`usa-nav-link-${option.id}`"
+          >
             <span>{{ option.label }}</span>
           </router-link>
         </template>
@@ -126,7 +144,11 @@ export default {
           @input="searchFormInput($event, form.id)"
           @keydown="searchFormKeyDown($event, form.id)"
         />
-        <button class="usa-button" type="submit" @click="searchFormSubmit($event, form.id)">
+        <button
+          class="usa-button"
+          type="submit"
+          @click="searchFormSubmit($event, form.id)"
+        >
           <span class="usa-sr-only">{{ form.buttonLabel }}</span>
         </button>
       </template>

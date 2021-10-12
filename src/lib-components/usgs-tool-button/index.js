@@ -1,3 +1,3 @@
-import Comp from './TextInput.vue'
+import Comp from "./ToolButton.vue";
 
-export default Comp
+export default Comp;

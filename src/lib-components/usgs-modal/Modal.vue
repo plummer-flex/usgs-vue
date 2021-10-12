@@ -1,9 +1,9 @@
 <script>
-import { Escapable } from '@/mixins/Escapable'
-import UsaIconClose from '@/components/USWDS/Icon/IconClose'
+import { Escapable } from "@/Escapable";
+import UsaIconClose from "@/lib-components/uswds-icon/IconClose.vue";
 
 export default {
-  name: 'wuds-modal',
+  name: "wuds-modal",
   mixins: [Escapable],
   components: {
     UsaIconClose,
@@ -21,31 +21,31 @@ export default {
   data() {
     return {
       show: false,
-    }
+    };
   },
   methods: {
     openModal() {
-      this.show = true
-      document.querySelector('body').classList.add('overflow-hidden')
-      this.$emit('opened', this.id)
+      this.show = true;
+      document.querySelector("body").classList.add("overflow-hidden");
+      this.$emit("opened", this.id);
       this.$nextTick(() => {
-        const frameRef = this.$refs['dialog-frame']
-        frameRef.focus()
-      })
+        const frameRef = this.$refs["dialog-frame"];
+        frameRef.focus();
+      });
     },
     closeModal() {
-      this.show = false
-      document.querySelector('body').classList.remove('overflow-hidden')
-      this.$emit('closed', this.id)
+      this.show = false;
+      document.querySelector("body").classList.remove("overflow-hidden");
+      this.$emit("closed", this.id);
     },
     // Handle Escape key
     escapeHandler() {
       if (this.escapable) {
-        this.closeModal()
+        this.closeModal();
       }
     },
   },
-}
+};
 </script>
 
 <template>
@@ -67,7 +67,10 @@ export default {
           <h2>
             <slot name="header" />
           </h2>
-          <UsaIconClose classNames="close-btn float-right" @click="closeModal"></UsaIconClose>
+          <UsaIconClose
+            classNames="close-btn float-right"
+            @click="closeModal"
+          ></UsaIconClose>
         </header>
         <section class="modal_body">
           <slot name="body" />
@@ -81,7 +84,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@import '@/styles/windows.scss';
+@import "../../styles/windows.scss";
 
 .wuds-modal {
   position: fixed;

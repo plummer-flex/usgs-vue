@@ -1,11 +1,17 @@
 <script>
-import { KEY_ENTER, KEY_ESCAPE, KEY_DOWN, KEY_SPACE, KEY_UP } from '@/lib/commonKeyCodes'
-import PillBox from '@/components/PillBox'
-import UsaIconSearch from '@/components/USWDS/Icon/IconSearch'
-import { EventBus } from '@/event-bus'
+import {
+  KEY_ENTER,
+  KEY_ESCAPE,
+  KEY_DOWN,
+  KEY_SPACE,
+  KEY_UP,
+} from "@/commonKeyCodes";
+import PillBox from "@/lib-components/usgs-pillbox";
+import UsaIconSearch from "@/lib-components/uswds-icon/IconSearch.vue";
+import { EventBus } from "@/event-bus";
 
 export default {
-  name: 'select-combo-box',
+  name: "select-combo-box",
   components: {
     PillBox,
     UsaIconSearch,
@@ -15,12 +21,12 @@ export default {
       popupHidden: true,
       selectedValues: [],
       singleSelectedValue: {},
-      selectedText: '',
+      selectedText: "",
       filteredValues: [],
-      lastItem: '',
-      firstItem: '',
-      focusedElement: '',
-    }
+      lastItem: "",
+      firstItem: "",
+      focusedElement: "",
+    };
   },
   props: {
     id: {
@@ -29,43 +35,43 @@ export default {
     },
     listType: {
       type: String,
-      default: 'single',
+      default: "single",
     },
     classNames: {
       type: String,
-      default: '',
+      default: "",
     },
     labelText: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     listLabel: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     options: {
       type: Array,
       required: false,
       default() {
-        return []
+        return [];
       },
     },
     placeholder: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     hintId: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     hint: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     pillBox: {
       type: Boolean,
@@ -75,7 +81,7 @@ export default {
     optionResultsField: {
       type: String,
       required: false,
-      default: 'value',
+      default: "value",
     },
     alwaysOpen: {
       type: Boolean,
@@ -98,224 +104,242 @@ export default {
   computed: {
     cssProps() {
       return {
-        '--z-index-offset': this.zIndexOffset,
-        '--top-border-width': this.hideFilterTextbox ? '1px' : '0px',
-      }
+        "--z-index-offset": this.zIndexOffset,
+        "--top-border-width": this.hideFilterTextbox ? "1px" : "0px",
+      };
     },
     cmpOptions: function() {
-      return this.options.filter(option => {
-        if (typeof option === 'object') {
-          return true
+      return this.options.filter((option) => {
+        if (typeof option === "object") {
+          return true;
         }
-      })
+      });
     },
     isSingleSelect: function() {
-      return this.listType === 'single'
+      return this.listType === "single";
     },
     placeholderText: function() {
-      return `Search ${this.placeholder}`
+      return `Search ${this.placeholder}`;
     },
     currentlySelectedText: function() {
-      return 'label' in this.singleSelectedValue ? this.singleSelectedValue.label : '- Select -'
+      return "label" in this.singleSelectedValue
+        ? this.singleSelectedValue.label
+        : "- Select -";
     },
   },
   directives: {
     close: {
       bind(el, binding, vnode) {
-        const handleOutsideClick = event => {
-          event.stopPropagation()
+        const handleOutsideClick = (event) => {
+          event.stopPropagation();
 
           // Get the handler method name and the exclude array
           // from the object used in v-close
-          const { handler, exclude } = binding.value
+          const { handler, exclude } = binding.value;
 
-          let clickedOnExcludeEl = false
-          exclude.forEach(refName => {
+          let clickedOnExcludeEl = false;
+          exclude.forEach((refName) => {
             // We only run this code if we haven't detected any excluded element yet
             if (!clickedOnExcludeEl) {
               // Get the element using the reference name
-              const excludedEl = vnode.context.$refs[refName]
-              if (excludedEl && typeof excludedEl.contains === 'function' && excludedEl.contains(event.target)) {
-                clickedOnExcludeEl = true
+              const excludedEl = vnode.context.$refs[refName];
+              if (
+                excludedEl &&
+                typeof excludedEl.contains === "function" &&
+                excludedEl.contains(event.target)
+              ) {
+                clickedOnExcludeEl = true;
               }
             }
-          })
+          });
 
           // Make sure the clicked element is not the popup item list and not excluded
           if (!el.contains(event.target) && !clickedOnExcludeEl) {
-            vnode.context[handler]()
+            vnode.context[handler]();
           }
-        }
-        el.__vueOutsideClickHandler__ = handleOutsideClick
+        };
+        el.__vueOutsideClickHandler__ = handleOutsideClick;
 
         // register click/touchstart event listeners on the whole page
-        document.addEventListener('click', handleOutsideClick)
-        document.addEventListener('touchstart', handleOutsideClick)
+        document.addEventListener("click", handleOutsideClick);
+        document.addEventListener("touchstart", handleOutsideClick);
       },
       unbind(el) {
-        document.removeEventListener('click', el.__vueOutsideClickHandler__)
-        document.removeEventListener('touchstart', el.__vueOutsideClickHandler__)
+        document.removeEventListener("click", el.__vueOutsideClickHandler__);
+        document.removeEventListener(
+          "touchstart",
+          el.__vueOutsideClickHandler__
+        );
       },
     },
   },
   methods: {
     togglePopup(event) {
-      event.stopPropagation()
+      event.stopPropagation();
       if (this.popupHidden) {
-        this.popupHidden = false
+        this.popupHidden = false;
         if (this.isSingleSelect) {
           this.$nextTick(() => {
-            this.focusInput()
-          })
+            this.focusInput();
+          });
         }
       } else {
-        this.popupHidden = true
+        this.popupHidden = true;
       }
     },
     selectKeyDown(event) {
       if (event.keyCode === KEY_ENTER) {
-        this.togglePopup(event)
+        this.togglePopup(event);
       }
     },
     closePopup() {
-      this.popupHidden = true
+      this.popupHidden = true;
     },
     focusInput() {
-      this.$refs['search-input'].focus()
-      this.focusedElement = 'search-input'
+      this.$refs["search-input"].focus();
+      this.focusedElement = "search-input";
 
       // scroll the list to the top
-      this.$refs['option-list-container'].scrollTop = 0
+      this.$refs["option-list-container"].scrollTop = 0;
     },
     searchInputFocus() {
-      this.popupHidden = false
-      this.focusedElement = 'search-input'
+      this.popupHidden = false;
+      this.focusedElement = "search-input";
     },
     toggleButtonFocus() {
-      this.focusedElement = 'toggle-button'
+      this.focusedElement = "toggle-button";
     },
     listItemFocus() {
-      this.focusedElement = 'list-item'
+      this.focusedElement = "list-item";
     },
     blurComboBox() {
-      const vue = this
+      const vue = this;
       setTimeout(() => {
-        const activeEl = document.activeElement
-        const comboBox = vue.$refs['select-combo-box']
+        const activeEl = document.activeElement;
+        const comboBox = vue.$refs["select-combo-box"];
         if (!comboBox.contains(activeEl)) {
           vue.$nextTick(() => {
-            vue.popupHidden = true
-          })
+            vue.popupHidden = true;
+          });
         }
-      }, 200)
+      }, 200);
     },
     searchInput(event) {
-      this.filterOptionList(event.target.value)
-      this.popupHidden = false
+      this.filterOptionList(event.target.value);
+      this.popupHidden = false;
     },
     clearSearch() {
-      this.$refs['search-input'].value = ''
+      this.$refs["search-input"].value = "";
     },
     searchKeyDown(event) {
       if ([KEY_UP, KEY_DOWN].indexOf(event.keyCode) > -1) {
         //event.stopPropagation()
-        event.preventDefault()
+        event.preventDefault();
 
         if (this.popupHidden) {
-          this.popupHidden = false
+          this.popupHidden = false;
         }
         if (event.keyCode === KEY_DOWN) {
-          this.$nextTick(this.focusNextListItem(event, this, 0, true))
+          this.$nextTick(this.focusNextListItem(event, this, 0, true));
         } else if (event.keyCode === KEY_UP) {
-          this.$nextTick(this.focusPreviousListItem(event, this, this.$refs['list-item'].length - 1, true))
+          this.$nextTick(
+            this.focusPreviousListItem(
+              event,
+              this,
+              this.$refs["list-item"].length - 1,
+              true
+            )
+          );
         }
       } else if (event.keyCode === KEY_ESCAPE) {
-        event.preventDefault()
-        this.popupHidden = true
+        event.preventDefault();
+        this.popupHidden = true;
         if (this.isSingleSelect) {
-          this.focusSelect()
+          this.focusSelect();
         }
       } else if (event.keyCode === KEY_ENTER) {
-        event.preventDefault()
-        this.popupHidden = false
+        event.preventDefault();
+        this.popupHidden = false;
       }
     },
     filterOptionList(value) {
       // we keep a list of values that have been hidden (filtered out), in order to determine if something
       // should be displayed or not.  See isFilteredOut() method.
-      this.filteredValues.splice(0)
+      this.filteredValues.splice(0);
 
       // the first and last item in the visible list is used when traversing the list with the keyboard
       // to keep track of when we reach the top or bottom of the list and need to refocus the input field
-      let firstItemFound = false
-      this.firstItem = ''
-      this.lastItem = ''
+      let firstItemFound = false;
+      this.firstItem = "";
+      this.lastItem = "";
 
-      this.cmpOptions.forEach(option => {
+      this.cmpOptions.forEach((option) => {
         if (option.label.toLowerCase().search(value.toLowerCase()) < 0) {
-          this.filteredValues.push(option.label)
+          this.filteredValues.push(option.label);
         } else {
           if (!firstItemFound) {
-            firstItemFound = true
-            this.firstItem = option.value
+            firstItemFound = true;
+            this.firstItem = option.value;
           }
-          this.lastItem = option.value
+          this.lastItem = option.value;
         }
-      })
+      });
     },
     isFilteredOut(value) {
-      return this.filteredValues.includes(value)
+      return this.filteredValues.includes(value);
     },
     selectOption(option) {
       if (this.isSingleSelect) {
         if (!this.isSelected(option)) {
-          this.singleSelectedValue = this.selectedValues[0] = option
+          this.singleSelectedValue = this.selectedValues[0] = option;
           // Send more general message to parent to notify them that an option has been selected.
           // This option should be the full option containing all data including the ID, label, and value.
-          this.$emit('item-selected', option[this.optionResultsField])
+          this.$emit("item-selected", option[this.optionResultsField]);
 
-          this.closePopup()
-          this.focusSelect()
+          this.closePopup();
+          this.focusSelect();
         }
       } else {
         if (this.disabled) {
-          return
+          return;
         }
 
-        const fld = this.optionResultsField
-        const found = this.selectedValues.find(item => {
-          item[fld] === option[fld]
-        })
+        const fld = this.optionResultsField;
+        const found = this.selectedValues.find((item) => {
+          item[fld] === option[fld];
+        });
         if (found == null) {
-          this.selectedValues.push(option)
+          this.selectedValues.push(option);
           // send message directly to pillbox with a value for display
-          EventBus.$emit('pill-update', {
+          EventBus.$emit("pill-update", {
             subscription: this.id,
             option: option[fld],
-          })
+          });
           // Send more general message to parent to notify them that an option has been selected.
           // This option should be the full option containing all data including the ID, label, and value.
-          this.$emit('multi-select-combo-box-select', {
+          this.$emit("multi-select-combo-box-select", {
             subscription: this.id,
             option: option,
-          })
+          });
         }
       }
     },
     selectAll() {
       if (!this.isSingleSelect) {
-        let fieldValues
+        let fieldValues;
 
         if (this.disabled) {
-          return
+          return;
         }
 
-        this.selectedValues = this.cmpOptions.slice(0)
-        fieldValues = this.selectedValues.map(item => item[this.optionResultsField])
-        EventBus.$emit('pill-group-add', {
+        this.selectedValues = this.cmpOptions.slice(0);
+        fieldValues = this.selectedValues.map(
+          (item) => item[this.optionResultsField]
+        );
+        EventBus.$emit("pill-group-add", {
           subscription: this.id,
           options: fieldValues,
-        })
+        });
       }
     },
     // Unselect an item
@@ -324,179 +348,199 @@ export default {
       if (this.isSingleSelect) {
         // emit option to the parent component to notify them that the option has been removed from selection
         if (this.selectedValues[0]) {
-          this.$emit('select-combo-box-unselect', {
+          this.$emit("select-combo-box-unselect", {
             subscription: this.id,
             option: this.selectedValues[0],
-          })
+          });
         }
 
-        this.selectedValues.splice(0)
+        this.selectedValues.splice(0);
       } else {
         if (this.disabled) {
-          return
+          return;
         }
 
-        const idx = this.selectedValues.findIndex(item => {
-          return item[this.optionResultsField] === value
-        })
-        const option = this.selectedValues[idx]
+        const idx = this.selectedValues.findIndex((item) => {
+          return item[this.optionResultsField] === value;
+        });
+        const option = this.selectedValues[idx];
 
         // emit option to the parent component to notify them that the option has been removed from selection
         if (option) {
-          this.$emit('multi-select-combo-box-unselect', {
+          this.$emit("multi-select-combo-box-unselect", {
             subscription: this.id,
             option: option,
-          })
+          });
         }
 
-        this.selectedValues.splice(idx, 1)
+        this.selectedValues.splice(idx, 1);
       }
     },
     isSelected(value) {
       if (this.selectedValues.length) {
         if (this.isSingleSelect) {
-          return value === this.selectedValues[0][this.optionResultsField]
+          return value === this.selectedValues[0][this.optionResultsField];
         } else {
-          const found = this.selectedValues.find(item => item[this.optionResultsField] === value)
-          return typeof found !== 'undefined'
+          const found = this.selectedValues.find(
+            (item) => item[this.optionResultsField] === value
+          );
+          return typeof found !== "undefined";
         }
       }
-      return false
+      return false;
     },
     focusSelect() {
-      this.$refs['main-select-control'].focus()
+      this.$refs["main-select-control"].focus();
     },
     focusNextListItem(event, vue, idx) {
-      event.preventDefault()
-      let li
-      for (; idx < vue.$refs['list-item'].length; idx++) {
-        li = vue.$refs['list-item'][idx]
-        if (!li.classList.contains('filtered-out') && !li.classList.contains('selected')) break
+      event.preventDefault();
+      let li;
+      for (; idx < vue.$refs["list-item"].length; idx++) {
+        li = vue.$refs["list-item"][idx];
+        if (
+          !li.classList.contains("filtered-out") &&
+          !li.classList.contains("selected")
+        )
+          break;
       }
-      if (idx < vue.$refs['list-item'].length) {
-        const el = vue.$refs['list-item'][idx]
-        el.focus()
-        el.parentNode.scrollTop = 0
+      if (idx < vue.$refs["list-item"].length) {
+        const el = vue.$refs["list-item"][idx];
+        el.focus();
+        el.parentNode.scrollTop = 0;
       }
     },
     focusPreviousListItem(event, vue, idx) {
-      event.preventDefault()
-      let li
+      event.preventDefault();
+      let li;
       for (; idx >= 0; idx--) {
-        li = vue.$refs['list-item'][idx]
-        if (!li.classList.contains('filtered-out') && !li.classList.contains('selected')) break
+        li = vue.$refs["list-item"][idx];
+        if (
+          !li.classList.contains("filtered-out") &&
+          !li.classList.contains("selected")
+        )
+          break;
       }
       if (idx >= 0) {
-        vue.$refs['list-item'][idx].focus()
+        vue.$refs["list-item"][idx].focus();
       }
     },
     optionsListKeyDown(event, idx, option) {
       // add enter key to this to handle selection
       // handle up and down back to input field
-      if ([KEY_UP, KEY_DOWN, KEY_ENTER, KEY_SPACE, KEY_ESCAPE].indexOf(event.keyCode) > -1) {
-        event.preventDefault()
+      if (
+        [KEY_UP, KEY_DOWN, KEY_ENTER, KEY_SPACE, KEY_ESCAPE].indexOf(
+          event.keyCode
+        ) > -1
+      ) {
+        event.preventDefault();
 
         // Handle Down Arrow
         if (event.keyCode === KEY_DOWN) {
-          if (idx >= this.cmpOptions.length - 1 || option.value === this.lastItem) {
+          if (
+            idx >= this.cmpOptions.length - 1 ||
+            option.value === this.lastItem
+          ) {
             // focus back on input field
-            this.$nextTick(this.focusInput())
+            this.$nextTick(this.focusInput());
           } else {
             // focus on next item in list
-            this.$nextTick(this.focusNextListItem(event, this, ++idx))
+            this.$nextTick(this.focusNextListItem(event, this, ++idx));
           }
         }
         // Handle Up Arrow
         else if (event.keyCode === KEY_UP) {
           if (idx <= 0 || option.value === this.firstItem) {
             // focus back on input field
-            this.$nextTick(this.focusInput())
+            this.$nextTick(this.focusInput());
           } else {
             // focus on next item in list
-            this.$nextTick(this.focusPreviousListItem(event, this, --idx))
+            this.$nextTick(this.focusPreviousListItem(event, this, --idx));
           }
         }
         // handle Enter Key or Space Key
         else if (event.keyCode === KEY_ENTER || event.keyCode === KEY_SPACE) {
-          if (idx >= this.cmpOptions.length - 1 || option.value === this.lastItem) {
+          if (
+            idx >= this.cmpOptions.length - 1 ||
+            option.value === this.lastItem
+          ) {
             // if this is the last item in the list, then focus the input
-            this.$nextTick(this.focusInput())
+            this.$nextTick(this.focusInput());
           } else {
             // otherwise focus the next item in the list
-            this.$nextTick(this.focusNextListItem(event, this, ++idx))
+            this.$nextTick(this.focusNextListItem(event, this, ++idx));
           }
-          this.selectOption(option)
+          this.selectOption(option);
         }
         // handle escape: close popup and focus input field
         else if (event.keyCode === KEY_ESCAPE) {
           this.$nextTick(async () => {
-            await this.focusInput()
-            this.popupHidden = true
+            await this.focusInput();
+            this.popupHidden = true;
             if (this.isSingleSelect) {
-              this.focusSelect()
+              this.focusSelect();
             }
-          })
+          });
         }
       }
     },
     processPillDisolve(event) {
       if (!this.isSingleSelect && event.subscription === this.id) {
-        this.unselectOption(event.option)
+        this.unselectOption(event.option);
       }
     },
     processFocusInput(event) {
       if (event.subscription === this.id) {
-        this.focusInput()
+        this.focusInput();
       }
     },
     getSelected() {
-      return this.selectedValues[0]
+      return this.selectedValues[0];
     },
     getSelectedList() {
-      return this.selectedValues
+      return this.selectedValues;
     },
     setSelected(selected) {
       if (selected != null) {
-        this.selectedValues = [selected]
+        this.selectedValues = [selected];
       }
     },
     setSelectedList(selectedList) {
       if (selectedList != null) {
-        this.selectedValues = selectedList
+        this.selectedValues = selectedList;
       }
-      EventBus.$emit('pill-group-add', {
+      EventBus.$emit("pill-group-add", {
         subscription: this.id,
-        options: selectedList.map(ob => ob[this.optionResultsField]),
-      })
+        options: selectedList.map((ob) => ob[this.optionResultsField]),
+      });
     },
     clearSelected() {
-      this.selectedValues.splice(0)
+      this.selectedValues.splice(0);
     },
     clearSelectedList() {
-      EventBus.$emit('purge-all-pills', {
+      EventBus.$emit("purge-all-pills", {
         subscription: this.id,
-      })
-      this.selectedValues.splice(0)
-      this.filterOptionList('')
-      this.$refs['search-input'].value = ''
+      });
+      this.selectedValues.splice(0);
+      this.filterOptionList("");
+      this.$refs["search-input"].value = "";
     },
   },
   created() {
     if (!this.isSingleSelect) {
-      EventBus.$on('pill-disolve', this.processPillDisolve)
+      EventBus.$on("pill-disolve", this.processPillDisolve);
       if (this.alwaysOpen) {
-        this.popupHidden = false
+        this.popupHidden = false;
       }
     }
-    EventBus.$on('focus-input', this.processFocusInput)
+    EventBus.$on("focus-input", this.processFocusInput);
   },
   destroyed() {
     if (!this.isSingleSelect) {
-      EventBus.$off('pill-disolve', this.processPillDisolve)
+      EventBus.$off("pill-disolve", this.processPillDisolve);
     }
-    EventBus.$off('focus-input', this.processFocusInput)
+    EventBus.$off("focus-input", this.processFocusInput);
   },
-}
+};
 </script>
 
 <template>
@@ -558,9 +602,17 @@ export default {
           @keydown="searchKeyDown($event)"
           @blur="blurComboBox()"
         />
-        <UsaIconSearch classNames="multi-select-combo-box__search-icon"></UsaIconSearch>
-        <div class="multi-select-combo-box__input-button-separator" v-if="!this.alwaysOpen"></div>
-        <span class="multi-select-combo-box__toggle-list__wrapper" v-if="!this.alwaysOpen">
+        <UsaIconSearch
+          classNames="multi-select-combo-box__search-icon"
+        ></UsaIconSearch>
+        <div
+          class="multi-select-combo-box__input-button-separator"
+          v-if="!this.alwaysOpen"
+        ></div>
+        <span
+          class="multi-select-combo-box__toggle-list__wrapper"
+          v-if="!this.alwaysOpen"
+        >
           <button
             class="multi-select-combo-box__toggle-list"
             type="button"
@@ -583,7 +635,11 @@ export default {
         tabindex="-1"
         :aria-labelledby="listLabel"
         :hidden="popupHidden"
-        :class="isSingleSelect ? 'single-select-combo-box__list' : 'multi-select-combo-box__list'"
+        :class="
+          isSingleSelect
+            ? 'single-select-combo-box__list'
+            : 'multi-select-combo-box__list'
+        "
       >
         <ul class="option-list" ref="option-list" v-if="isSingleSelect">
           <li class="single-select-combo-box__search-field">
@@ -600,7 +656,9 @@ export default {
               @keydown="searchKeyDown($event)"
               @blur="blurComboBox()"
             />
-            <UsaIconSearch classNames="select-combo-box__search-icon"></UsaIconSearch>
+            <UsaIconSearch
+              classNames="select-combo-box__search-icon"
+            ></UsaIconSearch>
           </li>
           <li
             class="single-select-combo-box__list-option"
@@ -645,24 +703,40 @@ export default {
         </ul>
       </div>
       <div class="select-combo-box__status usa-sr-only" role="status"></div>
-      <span id="single-select-combo-box__assistive-hint" class="usa-sr-only" v-if="isSingleSelect">
+      <span
+        id="single-select-combo-box__assistive-hint"
+        class="usa-sr-only"
+        v-if="isSingleSelect"
+      >
         <ul>
-          <li>Enter a value into the input field to search or filter options.</li>
+          <li>
+            Enter a value into the input field to search or filter options.
+          </li>
           <li>Navigate to an option using the mouse or keyboard.</li>
           <li>Click or press enter to select an option.</li>
           <li>Only one option may be selected</li>
         </ul>
       </span>
-      <span id="multi-select-combo-box__assistive-hint" class="usa-sr-only" v-if="!isSingleSelect">
+      <span
+        id="multi-select-combo-box__assistive-hint"
+        class="usa-sr-only"
+        v-if="!isSingleSelect"
+      >
         <ul>
-          <li>Enter a value into the input field to search or filter options.</li>
+          <li>
+            Enter a value into the input field to search or filter options.
+          </li>
           <li>Navigate to an option using the mouse or keyboard.</li>
           <li>Click or press enter to select an option.</li>
           <li>Multiple options may be selected</li>
-          <li>When an item is selected, it is added to a list above the input field.</li>
           <li>
-            Click or navigate back to the selected options list above the input field and click or press delete to
-            remove an item from the selected options.
+            When an item is selected, it is added to a list above the input
+            field.
+          </li>
+          <li>
+            Click or navigate back to the selected options list above the input
+            field and click or press delete to remove an item from the selected
+            options.
           </li>
         </ul>
       </span>
@@ -671,7 +745,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@import '@/styles/styles.scss';
+@import "../../styles/styles.scss";
 
 .select-combo-box:first-child {
   .usa-label:first-child {
@@ -740,7 +814,7 @@ export default {
       max-width: none;
       width: calc(100% - 10px);
       padding-right: calc(2rem + 4px);
-      border: units(1px) solid color('base-lighter');
+      border: units(1px) solid color("base-lighter");
       background-color: white;
     }
 
@@ -815,14 +889,14 @@ export default {
     }
     .single-select-combo-box__clear-input,
     .multi-select-combo-box__clear-input {
-      @include add-background-svg('usa-icons/close');
+      @include add-background-svg("usa-icons/close");
       display: none;
       right: calc(2.5em + 3px);
     }
 
     .single-select-combo-box__toggle-list,
     .multi-select-combo-box__toggle-list {
-      @include add-background-svg('usa-icons/expand_more');
+      @include add-background-svg("usa-icons/expand_more");
       background-size: auto units(4);
       right: 4px;
     }
@@ -831,7 +905,7 @@ export default {
     }
     .single-select-combo-box__toggle-list.expanded,
     .multi-select-combo-box__toggle-list.expanded {
-      @include add-background-svg('usa-icons/expand_less');
+      @include add-background-svg("usa-icons/expand_less");
     }
 
     .multi-select-combo-box__search-icon {
@@ -849,7 +923,7 @@ export default {
 
     .single-select-combo-box__input-button-separator,
     .multi-select-combo-box__input-button-separator {
-      background-color: color('gray-cool-20');
+      background-color: color("gray-cool-20");
       position: absolute;
       top: 8px;
       height: 1.3rem;
@@ -867,8 +941,8 @@ export default {
     .single-select-combo-box__list,
     .multi-select-combo-box__list {
       @extend %block-input-general;
-      @include u-border(1px, 'base-dark');
-      background-color: color('white');
+      @include u-border(1px, "base-dark");
+      background-color: color("white");
       border-radius: 2px;
       border-top-width: var(--top-border-width);
       margin: 0;
@@ -887,7 +961,7 @@ export default {
 
     .single-select-combo-box__list-option,
     .multi-select-combo-box__list-option {
-      border-bottom: units(1px) solid color('base-lighter');
+      border-bottom: units(1px) solid color("base-lighter");
       cursor: pointer;
       display: block;
       padding: units(1);
@@ -895,13 +969,13 @@ export default {
       overflow: hidden;
       white-space: nowrap;
       &:focus {
-        @include focus-outline($width: 1px, $offset: -1px, $color: 'primary');
+        @include focus-outline($width: 1px, $offset: -1px, $color: "primary");
         outline-offset: -4px;
         position: relative;
         z-index: calc(100 + var(--z-index-offset));
-        background-color: color('primary');
-        color: color('white');
-        border-color: color('primary');
+        background-color: color("primary");
+        color: color("white");
+        border-color: color("primary");
       }
       &.filtered-out {
         display: none;
@@ -923,11 +997,11 @@ export default {
         display: none;
       }
     }
-    .multi-select-combo-box__list-option:focus[disabled='disabled'] {
+    .multi-select-combo-box__list-option:focus[disabled="disabled"] {
       background-color: transparent;
       outline-color: transparent;
     }
-    .multi-select-combo-box__list-option[disabled='disabled'] {
+    .multi-select-combo-box__list-option[disabled="disabled"] {
       color: #444;
     }
   }

@@ -1,6 +1,6 @@
 <script>
-import { EventBus } from '@/event-bus'
-import { KEY_ENTER } from '@/lib/commonKeyCodes'
+import { EventBus } from "@/event-bus";
+import { KEY_ENTER } from "@/commonKeyCodes";
 
 export default {
   data() {
@@ -8,7 +8,7 @@ export default {
       selectedIndex: 0, // the index of the selected tab
       tabs: [], // all of the tabs
       tabEls: [],
-    }
+    };
   },
   props: {
     id: {
@@ -17,41 +17,45 @@ export default {
     },
     mode: {
       type: String,
-      default: 'light',
+      default: "light",
     },
   },
   created() {
-    this.tabs = this.$children
+    this.tabs = this.$children;
   },
   mounted() {
-    this.tabs.forEach(tab => {
-      this.tabEls.push(tab.$el)
-    })
-    this.selectTab(0)
+    this.tabs.forEach((tab) => {
+      this.tabEls.push(tab.$el);
+    });
+    this.selectTab(0);
   },
   methods: {
     selectTab(i) {
-      this.selectedIndex = i
+      this.selectedIndex = i;
 
-      EventBus.$emit('tab-select', {
+      EventBus.$emit("tab-select", {
         subscription: this.id,
         option: {
           index: i,
           name: this.tabEls[i].title,
         },
-      })
+      });
     },
     tabKeyDown(event, i) {
       if (event.keyCode === KEY_ENTER) {
-        this.selectTab(i)
+        this.selectTab(i);
       }
     },
   },
-}
+};
 </script>
 
 <template>
-  <div class="tabbed-notebook" :class="{ tabs__light: mode === 'light', tabs__dark: mode === 'dark' }" :id="id">
+  <div
+    class="tabbed-notebook"
+    :class="{ tabs__light: mode === 'light', tabs__dark: mode === 'dark' }"
+    :id="id"
+  >
     <ul class="tabs__header">
       <li
         tabindex="0"
@@ -69,7 +73,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@import '@/styles/windows.scss';
+@import "../../styles/windows.scss";
 
 ul.tabs__header {
   display: block;

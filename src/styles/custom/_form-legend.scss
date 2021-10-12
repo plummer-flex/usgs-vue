@@ -1,0 +1,9 @@
+.usa-form {
+  .usa-fieldset {
+    .usa-legend {
+      margin-top: 0;
+      @include u-font("sans", "md");
+      font-weight: 400;
+    }
+  }
+}

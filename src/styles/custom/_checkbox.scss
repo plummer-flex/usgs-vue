@@ -1,0 +1,8 @@
+.usa-checkbox {
+  @include u-margin-top(1);
+  padding: 0;
+
+  .usa-checkbox__label {
+    margin-bottom: 0;
+  }
+}

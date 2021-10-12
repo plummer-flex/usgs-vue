@@ -1,2 +1,2 @@
-import Comp from "./Accordion.vue";
+import Comp from "./PrimaryNav.vue";
 export default Comp;

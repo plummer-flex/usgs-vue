@@ -1,7 +1,7 @@
 <script>
-import { EventBus } from '@/event-bus'
-import { KEY_DELETE, KEY_BACKSPACE } from '@/lib/commonKeyCodes'
-import UsaIconClose from '@/components/USWDS/Icon/IconClose'
+import { EventBus } from "@/event-bus";
+import { KEY_DELETE, KEY_BACKSPACE } from "@/commonKeyCodes";
+import UsaIconClose from "@/lib-components/uswds-icon/IconClose.vue";
 
 export default {
   components: {
@@ -10,7 +10,7 @@ export default {
   data() {
     return {
       selectedValues: [],
-    }
+    };
   },
   props: {
     subscription: {
@@ -22,85 +22,92 @@ export default {
     deletePill(opName) {
       if (this.selectedValues.indexOf(opName) >= 0) {
         setTimeout(() => {
-          const idx = this.selectedValues.indexOf(opName)
-          const lastIdx = this.selectedValues.length - 1
-          this.selectedValues.splice(idx, 1)
+          const idx = this.selectedValues.indexOf(opName);
+          const lastIdx = this.selectedValues.length - 1;
+          this.selectedValues.splice(idx, 1);
 
-          EventBus.$emit('pill-disolve', {
+          EventBus.$emit("pill-disolve", {
             subscription: this.subscription,
             option: opName,
-          })
+          });
 
           if (idx >= lastIdx) {
-            EventBus.$emit('focus-input', {
+            EventBus.$emit("focus-input", {
               subscription: this.subscription,
-              option: '',
-            })
+              option: "",
+            });
           } else {
-            this.focusNextElement()
+            this.focusNextElement();
           }
-        }, 100)
+        }, 100);
       }
     },
     pillKeyDown(event, opName) {
       if (event.keyCode === KEY_DELETE || event.keyCode === KEY_BACKSPACE) {
-        this.deletePill(opName)
+        this.deletePill(opName);
       }
     },
     pillFocus() {
-      this.focusedElement = 'multi-select-pill'
+      this.focusedElement = "multi-select-pill";
     },
     focusNextElement() {
       // add all elements we want to include in our selection
       var focussableElements =
-        'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])'
+        'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
 
       if (document.activeElement) {
-        var focussable = Array.prototype.filter.call(document.querySelectorAll(focussableElements), function(element) {
-          // check for visibility while always include the current activeElement
-          return element.offsetWidth > 0 || element.offsetHeight > 0 || element === document.activeElement
-        })
-        var index = focussable.indexOf(document.activeElement)
+        var focussable = Array.prototype.filter.call(
+          document.querySelectorAll(focussableElements),
+          function(element) {
+            // check for visibility while always include the current activeElement
+            return (
+              element.offsetWidth > 0 ||
+              element.offsetHeight > 0 ||
+              element === document.activeElement
+            );
+          }
+        );
+        var index = focussable.indexOf(document.activeElement);
         if (index > -1) {
-          var nextElement = focussable[index] || focussable[0]
-          nextElement.focus()
+          var nextElement = focussable[index] || focussable[0];
+          nextElement.focus();
         }
       }
     },
     pillUpdater(event) {
       if (this.subscription === event.subscription) {
-        this.selectedValues.push(event.option)
+        this.selectedValues.push(event.option);
       }
     },
     pillRemove(event) {
       if (this.subscription === event.subscription) {
-        this.deletePill(event.option)
+        this.deletePill(event.option);
       }
     },
     pillGroupAdd(event) {
       if (this.subscription === event.subscription) {
-        this.selectedValues = event.options
+        this.selectedValues = event.options;
       }
     },
     purgeAllPills(event) {
       if (this.subscription === event.subscription) {
-        this.selectedValues = []
+        this.selectedValues = [];
       }
     },
   },
   created() {
-    EventBus.$on('pill-update', this.pillUpdater)
-    EventBus.$on('pill-remove', this.pillRemove)
-    EventBus.$on('pill-group-add', this.pillGroupAdd)
-    EventBus.$on('purge-all-pills', this.purgeAllPills)
+    EventBus.$on("pill-update", this.pillUpdater);
+    EventBus.$on("pill-remove", this.pillRemove);
+    EventBus.$on("pill-group-add", this.pillGroupAdd);
+    EventBus.$on("purge-all-pills", this.purgeAllPills);
   },
   destroyed() {
-    EventBus.$off('pill-update', this.pillUpdater)
-    EventBus.$off('pill-remove', this.pillRemove)
-    EventBus.$off('pill-group-add', this.pillGroupAdd)
-    EventBus.$off('purge-all-pills', this.purgeAllPills)
+    EventBus.$off("pill-update", this.pillUpdater);
+    EventBus.$off("pill-remove", this.pillRemove);
+    EventBus.$off("pill-group-add", this.pillGroupAdd);
+    EventBus.$off("purge-all-pills", this.purgeAllPills);
   },
-}
+};
 </script>
 
 <template>

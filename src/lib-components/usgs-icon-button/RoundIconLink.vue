@@ -1,10 +1,10 @@
 <script>
-import usaIcon from '@/components/USWDS/Icon/Icon'
+import usaIcon from "@/lib-components/uswds-icon";
 export default {
   data() {
     return {
-      iconId: 'my-icon-id-123',
-    }
+      iconId: "my-icon-id-123",
+    };
   },
   components: {
     usaIcon,
@@ -42,32 +42,38 @@ export default {
   computed: {
     textColor: function() {
       if (this.color === undefined || this.color.length < 1) {
-        return 'white'
+        return "white";
       } else {
-        return this.color
+        return this.color;
       }
     },
     bgColor: function() {
-      if (this.backgroundColor === undefined || this.backgroundColor.length < 1) {
-        return 'black'
+      if (
+        this.backgroundColor === undefined ||
+        this.backgroundColor.length < 1
+      ) {
+        return "black";
       } else {
-        return this.backgroundColor
+        return this.backgroundColor;
       }
     },
     iconTitle: function() {
       if (this.title === undefined || this.title.length < 1) {
-        return this.text
+        return this.text;
       } else {
-        return this.title
+        return this.title;
       }
     },
   },
-}
+};
 </script>
 
 <template>
   <div :class="className" class="round-icon-link">
-    <div class="circle-icon" :style="{ backgroundColor: bgColor, color: textColor }">
+    <div
+      class="circle-icon"
+      :style="{ backgroundColor: bgColor, color: textColor }"
+    >
       <usa-icon
         :class-name="className"
         :image-source="imageSource"

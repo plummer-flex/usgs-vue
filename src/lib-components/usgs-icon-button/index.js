@@ -1,3 +1,3 @@
-import Comp from "./IconButton.vue";
+import Comp from "./RoundIconLink.vue";
 
 export default Comp;

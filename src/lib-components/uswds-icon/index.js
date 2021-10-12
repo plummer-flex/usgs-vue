@@ -1,2 +1,2 @@
-import Comp from "./Accordion.vue";
+import Comp from "./Icon.vue";
 export default Comp;

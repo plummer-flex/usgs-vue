@@ -1,39 +1,39 @@
 <script>
-import { EventBus } from '@/event-bus'
+import { EventBus } from "@/event-bus";
 
 export default {
   props: {
     notebookId: {
       type: String,
-      default: '',
+      default: "",
     },
     title: {
       type: String,
-      default: 'Tab',
+      default: "Tab",
     },
   },
   data() {
     return {
       isActive: false,
-    }
+    };
   },
   methods: {
     tabSelectDisolve(event) {
       if (event.subscription === this.notebookId) {
-        this.isActive = event.option.name === this.title
+        this.isActive = event.option.name === this.title;
       }
     },
   },
   created() {
-    EventBus.$on('tab-select', this.tabSelectDisolve)
+    EventBus.$on("tab-select", this.tabSelectDisolve);
   },
   destroyed() {
-    EventBus.$off('tab-select', this.tabSelectDisolve)
+    EventBus.$off("tab-select", this.tabSelectDisolve);
   },
-}
+};
 </script>
 
-<template lang="html">
+<template>
   <div class="tab" v-show="isActive" :title="title" :notebook-id="notebookId">
     <slot></slot>
   </div>
