@@ -36,8 +36,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-          echo "New Version Tag ${{npm_update_text}}"
-          echo "${{npm_update_json}}"
+          echo "New Version Tag ${{steps.npm_version.outputs.npm_update_text}}"
+          echo "${{steps.npm_version.outputs.npm_update_json}}"
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         if: steps.npm_version.outputs.has_npm_update != 'false'
