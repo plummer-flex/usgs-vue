@@ -48,7 +48,7 @@ jobs:
 
           if: steps.npm_version.outputs.has_npm_update != 'false'
       - run: |
-          echo "New Tag Version ${{npm_update_json}}"
+          echo "New Tag Version ${{steps.npm_version.outputs.npm_update_json}}"
           npm ci
           npm run build
           npm publish
