@@ -45,8 +45,6 @@ jobs:
           tag: ${{ steps.npm_version.outputs.npm_update_text }}
           name: Release ${{ steps.tag_version.outputs.npm_update_text }}
           body: ${{ steps.tag_version.outputs.changelog }}
-
-          if: steps.npm_version.outputs.has_npm_update != 'false'
       - run: |
           echo "New Tag Version ${{steps.npm_version.outputs.npm_update_json}}"
           npm ci
