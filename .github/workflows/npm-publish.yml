@@ -31,12 +31,15 @@ jobs:
         uses: mathieudutour/github-tag-action@v5.6
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          echo "New Version Tag ${{npm_update_text}}"
+          echo "${{npm_update_json}}"
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         if: steps.npm_version.outputs.has_npm_update != 'false'
         with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          tag: ${{ steps.npm_version.outputs.npm_update_text }}
+          name: Release ${{ steps.tag_version.outputs.npm_update_text }}
           body: ${{ steps.tag_version.outputs.changelog }}
       - uses: actions/setup-node@v2
         with:
@@ -44,6 +47,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
         if: steps.npm_version.outputs.has_npm_update != 'false'
         run: |
+          echo "New Tag Version ${{npm_update_json}}"
           npm ci
           npm run build
           npm publish
