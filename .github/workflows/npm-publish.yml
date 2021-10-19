@@ -42,7 +42,7 @@ jobs:
           body: ${{ steps.tag_version.outputs.changelog }}
       - name: Publish to NPM Registry
         run: |
-          echo "New Tag Version ${{steps.package_version.outputs.version}"
+          echo "New Tag Version ${{steps.package_version.outputs.version}}"
           npm ci
           npm run build
           npm publish
