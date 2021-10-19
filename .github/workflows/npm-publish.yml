@@ -27,26 +27,26 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - name: Detect if npm version change
-        uses: MeilCli/npm-update-check-action@v4
-        id: npm_version
+      - name: get-npm-version
+        id: package_version
+        uses: martinbeentjes/npm-get-version-action@master
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v5.6
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-          echo "New Version Tag ${{steps.npm_version.outputs.npm_update_text}}"
-          echo "${{steps.npm_version.outputs.npm_update_json}}"
+          echo "New Version Tag ${{steps.package_version.outputs.npm_update_text}}"
+          echo "${{steps.package_version.outputs.npm_update_json}}"
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
-        if: steps.npm_version.outputs.has_npm_update != 'false'
+        if: steps.package_version.outputs.has_npm_update != 'false'
         with:
-          tag: ${{ steps.npm_version.outputs.npm_update_text }}
+          tag: ${{ steps.package_version.outputs.npm_update_text }}
           name: Release ${{ steps.tag_version.outputs.npm_update_text }}
           body: ${{ steps.tag_version.outputs.changelog }}
       - run: |
-          echo "New Tag Version ${{steps.npm_version.outputs.npm_update_json}}"
+          echo "New Tag Version ${{steps.package_version.outputs.npm_update_json}}"
           npm ci
           npm run build
           npm publish
