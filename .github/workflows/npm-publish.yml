@@ -31,9 +31,9 @@ jobs:
           file-name: ./package.json
       - run: |
           echo "//----------- New Release Version ------------//"
-          echo "version: ${{steps.package_version.outputs.version, "undefined"}}"
-          echo "changed: ${{steps.package_version.outputs.changed, "undefined"}}"
-          echo "type: ${{steps.package_version.outputs.type, "undefined"}}"
+          echo "version: ${{steps.package_version.outputs.version}}"
+          echo "changed: ${{steps.package_version.outputs.changed}}"
+          echo "type: ${{steps.package_version.outputs.type}}"
           echo "//-------------------------------------------//"
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
