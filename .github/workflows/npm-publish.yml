@@ -44,7 +44,7 @@ jobs:
         if: steps.package_version.outputs.versionChanged == 'true'
         with:
           tag: ${{ steps.package_version.outputs.releaseVersion }}
-          name: Release v${{ steps.tag_version.outputs.releaseVersion }}
+          name: Release ${{ steps.package_version.outputs.releaseVersion }}
           body: ""
       - name: Publish to NPM Registry
         if: steps.package_version.outputs.versionChanged == 'true'
