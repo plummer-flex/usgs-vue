@@ -27,26 +27,22 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - name: get-npm-version
+      - name: Check Package Version
+        uses: EndBug/version-check@v1
         id: package_version
-        uses: martinbeentjes/npm-get-version-action@master
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v5.6
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-          echo "New Version Tag ${{steps.package_version.outputs.npm_update_text}}"
+          echo "New Release Version ${{steps.package_version.outputs.version}}"
           echo "${{steps.package_version.outputs.npm_update_json}}"
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
-        if: steps.package_version.outputs.has_npm_update != 'false'
+        if: steps.package_version.outputs.changed == 'true'
         with:
-          tag: ${{ steps.package_version.outputs.npm_update_text }}
-          name: Release ${{ steps.tag_version.outputs.npm_update_text }}
+          tag: ${{ steps.package_version.outputs.version }}
+          name: Release ${{ steps.tag_version.outputs.version }}
           body: ${{ steps.tag_version.outputs.changelog }}
-      - run: |
-          echo "New Tag Version ${{steps.package_version.outputs.npm_update_json}}"
+      - name: Publish to NPM Registry
+        run: |
+          echo "New Tag Version ${{steps.package_version.outputs.version}"
           npm ci
           npm run build
           npm publish
