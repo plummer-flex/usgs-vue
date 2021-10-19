@@ -24,28 +24,32 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - name: Check Package Version
-        uses: EndBug/version-check@v1
-        id: package_version
+      - run: git fetch --all --tags
+      - name: Check Release Version
+        uses: thebongy/version-check@v1
         with:
-          file-name: ./package.json
-      - run: |
+          file: package.json
+          tagFormat: v${version}-beta
+        id: package_version
+      - name: Post Version Information
+        run: |
           echo "//----------- New Release Version ------------//"
-          echo "version: ${{steps.package_version.outputs.version}}"
-          echo "changed: ${{steps.package_version.outputs.changed}}"
-          echo "type: ${{steps.package_version.outputs.type}}"
+          echo "version: ${{steps.package_version.outputs.releaseVersion}}"
+          echo "changed: ${{steps.package_version.outputs.versionChanged}}"
+          echo "raw: ${{steps.package_version.outputs.rawVersion}}"
+          echo "type: ${{steps.package_version.outputs.releaseTags}}"
           echo "//-------------------------------------------//"
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
-        if: steps.package_version.outputs.changed == 'true'
+        if: steps.package_version.outputs.versionChanged == 'true'
         with:
-          tag: ${{ steps.package_version.outputs.version }}
-          name: Release ${{ steps.tag_version.outputs.version }}
-          body: ${{ steps.tag_version.outputs.changelog }}
+          tag: ${{ steps.package_version.outputs.releaseVersion }}
+          name: Release v${{ steps.tag_version.outputs.releaseVersion }}
+          body: ""
       - name: Publish to NPM Registry
-        if: steps.package_version.outputs.changed == 'true'
+        if: steps.package_version.outputs.versionChanged == 'true'
         run: |
-          echo "New Tag Version ${{steps.package_version.outputs.version}}"
+          echo "New Tag v${{steps.package_version.outputs.releaseVersion}}"
           npm ci
           npm run build
           npm publish
