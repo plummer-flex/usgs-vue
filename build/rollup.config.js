@@ -48,12 +48,8 @@ const baseConfig = {
       "process.env.NODE_ENV": JSON.stringify("production"),
     },
     vue: {
+      customBlocks: ["!docs", "!dev"],
       css: true,
-      // data: {
-      //   // This helps to inject variables in each <style> tag of every Vue SFC
-      //   scss: () => `@import "@/styles/variables.scss";`,
-      //   sass: () => `@import "@/styles/variables.scss"`,
-      // },
       style: {
         preprocessOptions: {
           scss: {

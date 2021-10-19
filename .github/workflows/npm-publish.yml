@@ -27,9 +27,11 @@ jobs:
       - name: Check Package Version
         uses: EndBug/version-check@v1
         id: package_version
+        with:
+          file-name: ./package.json
       - run: |
           echo "New Release Version ${{steps.package_version.outputs.version}}"
-          echo "${{steps.package_version.outputs.npm_update_json}}"
+          echo "${{steps.package_version.outputs}}"
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         if: steps.package_version.outputs.changed == 'true'

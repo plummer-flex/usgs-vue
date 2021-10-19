@@ -1,6 +1,6 @@
 # usgs-vue
 
-USGS components built with the USWDS
+USGS components built with the (USWDS)[https://designsystem.digital.gov/]
 
 ## versioning
 
