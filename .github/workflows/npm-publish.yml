@@ -30,8 +30,11 @@ jobs:
         with:
           file-name: ./package.json
       - run: |
-          echo "New Release Version ${{steps.package_version.outputs.version}}"
-          echo "${{steps.package_version.outputs}}"
+          echo "//----------- New Release Version ------------//"
+          echo "version: ${{steps.package_version.outputs.version, "undefined"}}"
+          echo "changed: ${{steps.package_version.outputs.changed, "undefined"}}"
+          echo "type: ${{steps.package_version.outputs.type, "undefined"}}"
+          echo "//-------------------------------------------//"
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         if: steps.package_version.outputs.changed == 'true'
@@ -40,6 +43,7 @@ jobs:
           name: Release ${{ steps.tag_version.outputs.version }}
           body: ${{ steps.tag_version.outputs.changelog }}
       - name: Publish to NPM Registry
+        if: steps.package_version.outputs.changed == 'true'
         run: |
           echo "New Tag Version ${{steps.package_version.outputs.version}}"
           npm ci
