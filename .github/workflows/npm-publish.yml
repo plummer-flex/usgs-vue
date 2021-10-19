@@ -30,6 +30,7 @@ jobs:
         with:
           file: package.json
           tagFormat: ${version}
+          failBuild: false
         id: package_version
       - name: Post Version Information
         run: |
