@@ -1,0 +1,276 @@
+.select-combo-box:first-child {
+  .usa-label:first-child {
+    margin-top: 0;
+    margin-bottom: 0.3em;
+  }
+}
+.select-combo-box {
+  .main-control {
+    display: inline-block;
+    position: relative;
+    min-width: 280px;
+    max-width: units($theme-input-max-width);
+    width: 100%;
+
+    .single-select-combo-box--pristine {
+      .single-select-combo-box__input {
+        padding-right: calc(5em + 4px);
+
+        &::-ms-clear {
+          display: none;
+        }
+      }
+
+      .select-combo-box__clear-input {
+        display: block;
+      }
+    }
+    .multi-select-input {
+      border-color: #5c5c5c;
+      background-color: transparent;
+    }
+    .multi-select-combo-box--pristine {
+      .multi-select-combo-box__input {
+        padding-right: calc(5em + 4px);
+
+        &::-ms-clear {
+          display: none;
+        }
+      }
+
+      .multi-select-combo-box__clear-input {
+        display: block;
+      }
+    }
+
+    #single-select-combo-box__assistive-hint,
+    #multi-select-combo-box__assistive-hint {
+      display: none;
+    }
+
+    .single-select-combo-box__current-selection {
+      height: 2.5rem;
+      border: 1px solid #5c5c5c;
+      border-radius: 2px;
+      background-color: white;
+      line-height: 2rem;
+      padding: 2px 10px;
+    }
+
+    .single-select-combo-box__input {
+      @extend %block-input-general;
+      @extend %block-input-styles;
+      appearance: none;
+      margin: 0 5px;
+      max-width: none;
+      width: calc(100% - 10px);
+      padding-right: calc(2rem + 4px);
+      border: units(1px) solid color("base-lighter");
+      background-color: white;
+    }
+
+    .select-combo-box__search-icon {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 24px;
+      height: 24px;
+      fill: #8c8c8c;
+    }
+
+    .single-select-combo-box__input:focus + svg {
+      fill: $colorBlue50;
+    }
+    .multi-select-combo-box__input {
+      @extend %block-input-general;
+      @extend %block-input-styles;
+      appearance: none;
+      margin-bottom: 0;
+      margin-top: 0;
+      max-width: none;
+      padding-right: calc(5em + 3px);
+      border-radius: 2px;
+    }
+
+    button.multi-select-combo-box__toggle-list,
+    button.multi-select-combo-box__clear-input {
+      &:focus {
+        outline-offset: -4px;
+      }
+    }
+    .select-combo-box__toggle-list,
+    .select-combo-box__clear-input {
+      width: 40px;
+      height: 38px;
+      line-height: 38px;
+      text-align: center;
+      &:focus {
+        outline-offset: -4px;
+      }
+    }
+
+    .single-select-combo-box__toggle-list__wrapper:focus,
+    .single-select-combo-box__clear-input__wrapper:focus,
+    .multi-select-combo-box__toggle-list__wrapper:focus,
+    .multi-select-combo-box__clear-input__wrapper:focus {
+      outline: 0;
+    }
+
+    .single-select-combo-box__toggle-list,
+    .single-select-combo-box__clear-input,
+    .multi-select-combo-box__toggle-list,
+    .multi-select-combo-box__clear-input {
+      background-color: transparent;
+      background-position: center;
+      background-size: auto units(3);
+      border: 0;
+      bottom: 1px;
+      cursor: pointer;
+      margin-bottom: 0;
+      opacity: 0.6;
+      padding-right: units(4);
+      position: absolute;
+      top: 13px;
+      z-index: calc(100 + var(--z-index-offset));
+      width: 30px;
+      height: 30px;
+    }
+    .single-select-combo-box__toggle-list {
+      top: 4px;
+    }
+    .single-select-combo-box__clear-input,
+    .multi-select-combo-box__clear-input {
+      @include add-background-svg("usa-icons/close");
+      display: none;
+      right: calc(2.5em + 3px);
+    }
+
+    .single-select-combo-box__toggle-list,
+    .multi-select-combo-box__toggle-list {
+      @include add-background-svg("usa-icons/expand_more");
+      background-size: auto units(4);
+      right: 4px;
+    }
+    .single-select-combo-box__toggle-list {
+      right: 5px;
+    }
+    .single-select-combo-box__toggle-list.expanded,
+    .multi-select-combo-box__toggle-list.expanded {
+      @include add-background-svg("usa-icons/expand_less");
+    }
+
+    .multi-select-combo-box__search-icon {
+      position: absolute;
+      top: 10px;
+      right: calc(3rem + 2px);
+      width: 24px;
+      height: 24px;
+      fill: #8c8c8c;
+    }
+
+    .multi-select-combo-box__input:focus + svg {
+      fill: $colorBlue50;
+    }
+
+    .single-select-combo-box__input-button-separator,
+    .multi-select-combo-box__input-button-separator {
+      background-color: color("gray-cool-20");
+      position: absolute;
+      top: 8px;
+      height: 1.3rem;
+      margin-bottom: 8px;
+      margin-top: 8px;
+      width: 1px;
+      right: calc(2.5em + 2px);
+      box-sizing: border-box;
+      z-index: calc(200 + var(--z-index-offset));
+    }
+
+    .single-select-combo-box__input-button-separator {
+      top: 0px;
+    }
+    .single-select-combo-box__list,
+    .multi-select-combo-box__list {
+      @extend %block-input-general;
+      @include u-border(1px, "base-dark");
+      background-color: color("white");
+      border-radius: 2px;
+      border-top-width: var(--top-border-width);
+      margin: 0;
+      max-height: 12.1em;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      padding: 0;
+      position: absolute;
+      width: 100%;
+      z-index: calc(400 + var(--z-index-offset));
+
+      &:focus {
+        outline: 0;
+      }
+    }
+
+    .single-select-combo-box__list-option,
+    .multi-select-combo-box__list-option {
+      border-bottom: units(1px) solid color("base-lighter");
+      cursor: pointer;
+      display: block;
+      padding: units(1);
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      &:focus {
+        @include focus-outline($width: 1px, $offset: -1px, $color: "primary");
+        outline-offset: -4px;
+        position: relative;
+        z-index: calc(100 + var(--z-index-offset));
+        background-color: color("primary");
+        color: color("white");
+        border-color: color("primary");
+      }
+      &.filtered-out {
+        display: none;
+      }
+      &--no-results {
+        cursor: not-allowed;
+        display: block;
+        padding: units(1);
+      }
+    }
+    .single-select-combo-box__list-option {
+      &.selected {
+        background-color: $colorBlue50;
+        color: white;
+      }
+    }
+    .multi-select-combo-box__list-option {
+      &.selected {
+        display: none;
+      }
+    }
+    .multi-select-combo-box__list-option:focus[disabled="disabled"] {
+      background-color: transparent;
+      outline-color: transparent;
+    }
+    .multi-select-combo-box__list-option[disabled="disabled"] {
+      color: #444;
+    }
+  }
+  .always-open {
+    .single-select-combo-box__list,
+    .multi-select-combo-box__list {
+      position: relative;
+      display: block;
+    }
+    .single-select-combo-box__input,
+    .multi-select-combo-box__input {
+      padding-right: 0;
+    }
+    .multi-select-combo-box__search-icon {
+      right: 0.5rem;
+    }
+    .multi-select-combo-box__input-button-separator {
+      display: none;
+    }
+  }
+}

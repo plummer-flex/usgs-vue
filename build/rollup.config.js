@@ -10,6 +10,7 @@ import babel from "@rollup/plugin-babel";
 import { terser } from "rollup-plugin-terser";
 import minimist from "minimist";
 import image from "@rollup/plugin-image";
+import scss from "rollup-plugin-scss";
 
 // Get browserslist config and remove ie from es build targets
 const esbrowserslist = fs
@@ -50,6 +51,10 @@ const baseConfig = {
     vue: {
       customBlocks: ["!docs", "!dev"],
       css: true,
+      data: {
+        // This helps to inject variables in each <style> tag of every Vue SFC
+        scss: () => `@import "@/styles/variables.scss";`,
+      },
       style: {
         preprocessOptions: {
           scss: {
@@ -58,13 +63,18 @@ const baseConfig = {
                 return {
                   file: url
                     .replace(/^~/, `${PATH_NODE_MODULES}/`)
-                    .replace(/^@/, PATH_SRC), // ain't pretty, it can be easily improved
+                    .replace(/^@/, PATH_SRC),
                 };
               },
             ],
           },
         },
       },
+    },
+    scss: {
+      output: "dist/usgs-styles.css",
+      outputStyle: "compressed",
+      include: ["src/styles/styles.scss"],
     },
     postVue: [
       resolve({
@@ -113,6 +123,7 @@ if (!argv.format || argv.format === "es") {
       ...baseConfig.plugins.preVue,
       vue(baseConfig.plugins.vue),
       ...baseConfig.plugins.postVue,
+      scss(baseConfig.plugins.scss),
       babel({
         ...baseConfig.plugins.babel,
         presets: [
