@@ -75,6 +75,7 @@ const baseConfig = {
       output: "dist/usgs-styles.css",
       outputStyle: "compressed",
       include: ["src/styles/styles.scss"],
+      includePaths: [PATH_NODE_MODULES],
     },
     postVue: [
       resolve({
@@ -122,8 +123,8 @@ if (!argv.format || argv.format === "es") {
       replace(baseConfig.plugins.replace),
       ...baseConfig.plugins.preVue,
       vue(baseConfig.plugins.vue),
-      ...baseConfig.plugins.postVue,
       scss(baseConfig.plugins.scss),
+      ...baseConfig.plugins.postVue,
       babel({
         ...baseConfig.plugins.babel,
         presets: [
@@ -163,6 +164,7 @@ if (!argv.format || argv.format === "cjs") {
           optimizeSSR: true,
         },
       }),
+      scss(baseConfig.plugins.scss),
       ...baseConfig.plugins.postVue,
       babel(baseConfig.plugins.babel),
     ],
@@ -187,6 +189,7 @@ if (!argv.format || argv.format === "iife") {
       ...baseConfig.plugins.preVue,
       vue(baseConfig.plugins.vue),
       ...baseConfig.plugins.postVue,
+      scss(baseConfig.plugins.scss),
       babel(baseConfig.plugins.babel),
       terser({
         output: {
