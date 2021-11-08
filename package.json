@@ -1,6 +1,6 @@
 {
   "name": "usgs-component-library-vue",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "repository": "https://github.com/plummer-flex/usgs-vue.git",
   "main": "dist/usgs-vue.ssr.js",
