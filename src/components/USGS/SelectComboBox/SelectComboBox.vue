@@ -6,8 +6,8 @@ import {
   KEY_SPACE,
   KEY_UP,
 } from "@/commonKeyCodes";
-import PillBox from "@/lib-components/usgs-pillbox";
-import UsaIconSearch from "@/lib-components/uswds-icon/IconSearch.vue";
+import PillBox from "@/components/USGS/Pillbox";
+import UsaIconSearch from "@/components/USWDS/Icon/IconSearch.vue";
 import { EventBus } from "@/event-bus";
 
 export default {

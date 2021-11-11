@@ -1,9 +1,8 @@
-
 // Import vue components
-import * as components from '@/lib-components/index';
+import * as components from "@/components";
 
 // install function executed by Vue.use()
-const install = function installUsgsVue(Vue) {
+export const install = function installUsgsVue(Vue) {
   Object.entries(components).forEach(([componentName, component]) => {
     Vue.component(componentName, component);
   });
@@ -14,4 +13,4 @@ export default install;
 
 // To allow individual component use, export components
 // each can be registered via Vue.component()
-export * from '@/lib-components/index';
+export * from "@/components/index";

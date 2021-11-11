@@ -1,5 +1,5 @@
 <script>
-import usaIcon from "@/lib-components/uswds-icon";
+import usaIcon from "@/components/USWDS/Icon";
 export default {
   data() {
     return {

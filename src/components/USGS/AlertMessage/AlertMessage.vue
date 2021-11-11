@@ -1,11 +1,11 @@
 <script>
-import UsaButton from "@/lib-components/uswds-button";
-import WudsModal from "@/lib-components/usgs-modal";
+import UsaButton from "@/components/USWDS/Button";
+import Modal from "@/components/USGS/Modal";
 
 export default {
   components: {
     UsaButton,
-    WudsModal,
+    Modal,
   },
   props: {
     title: {
@@ -42,7 +42,7 @@ export default {
 </script>
 
 <template>
-  <WudsModal id="alert-modal-id" ref="alert-modal-id">
+  <Modal id="alert-modal-id" ref="alert-modal-id">
     <template v-slot:header>{{ title }}</template>
     <template v-slot:body>
       {{ message }}
@@ -57,5 +57,5 @@ export default {
         >OK</UsaButton
       >
     </template>
-  </WudsModal>
+  </Modal>
 </template>

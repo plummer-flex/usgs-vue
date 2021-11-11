@@ -1,7 +1,7 @@
 <script>
 import { EventBus } from "@/event-bus";
 import { KEY_DELETE, KEY_BACKSPACE } from "@/commonKeyCodes";
-import UsaIconClose from "@/lib-components/uswds-icon/IconClose.vue";
+import UsaIconClose from "@/components/USWDS/Icon/IconClose.vue";
 
 export default {
   components: {
