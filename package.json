@@ -1,6 +1,6 @@
 {
   "name": "usgs-component-library-vue",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "",
   "scripts": {
     "serve": "vue-cli-service serve dev/serve.js",
