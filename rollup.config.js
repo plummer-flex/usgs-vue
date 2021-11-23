@@ -15,8 +15,7 @@ import url from "@rollup/plugin-url";
 import nested from "postcss-nested";
 import { terser } from "rollup-plugin-terser";
 import autoprefixer from "autoprefixer";
-import typescript from 'rollup-plugin-typescript2';
-import css from 'rollup-plugin-css-only';
+import sass from "rollup-plugin-sass";
 
 const postcssConfigList = [
   postcssImport({
@@ -24,7 +23,7 @@ const postcssConfigList = [
       // resolve alias @css, @import '@css/style.css'
       // because @css/ has 5 chars
       if (id.startsWith("@css")) {
-        return path.resolve("./src/assets/styles/css", id.slice(5));
+        return path.resolve("./src/styles", id.slice(5));
       }
 
       // resolve node_modules, @import '~normalize.css/normalize.css'
@@ -33,16 +32,16 @@ const postcssConfigList = [
         return path.resolve("./node_modules", id.slice(1));
       }
 
-      // resolve relative path, @import './components/style.css'
+      // resolve relative path, @import './src/styles'
       return path.resolve(basedir, id);
-    }
+    },
   }),
   simplevars,
   nested,
   postcssUrl({ url: "inline" }),
   autoprefixer({
-    overrideBrowserslist: "> 1%, IE 6, Explorer >= 10, Safari >= 7"
-  })
+    overrideBrowserslist: "> 1%, IE 6, Explorer >= 10, Safari >= 7",
+  }),
 ];
 
 const argv = minimist(process.argv.slice(2));
@@ -53,30 +52,19 @@ let postVueConfig = [
   // Process only `<style module>` blocks.
   PostCSS({
     modules: {
-      generateScopedName: '[local]___[hash:base64:5]',
+      generateScopedName: "[local]___[hash:base64:5]",
     },
     include: /&module=.*\.css$/,
   }),
   // Process all `<style>` blocks except `<style module>`.
-  PostCSS({ include: /(?<!&module=.*)\.css$/,
-    plugins:[
-      ...postcssConfigList
-    ]
-   }),
+  PostCSS({
+    include: /(?<!&module=.*)\.css$/,
+    plugins: [...postcssConfigList],
+  }),
   url({
-      include: [
-        '**/*.svg',
-        '**/*.png',
-        '**/*.gif',
-        '**/*.jpg',
-        '**/*.jpeg'
-      ]
-    }),
-]
-
-if(process.env.SEP_CSS){
-  postVueConfig = [css({ output: './dist/bundle.css' }), ...postVueConfig]
-}
+    include: ["**/*.svg", "**/*.png", "**/*.gif", "**/*.jpg", "**/*.jpeg"],
+  }),
+];
 
 const baseConfig = {
   plugins: {
@@ -85,33 +73,31 @@ const baseConfig = {
         entries: [
           {
             find: "@",
-            replacement: `${path.resolve(projectRoot, "src")}`
-          }
+            replacement: `${path.resolve(projectRoot, "src")}`,
+          },
         ],
         customResolver: resolve({
-          extensions: [".js", ".jsx", ".vue"]
-        })
-      })
+          extensions: [".js", ".jsx", ".vue"],
+        }),
+      }),
     ],
     replace: {
       "process.env.NODE_ENV": JSON.stringify("production"),
       __VUE_OPTIONS_API__: JSON.stringify(true),
-      __VUE_PROD_DEVTOOLS__: JSON.stringify(false)
+      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
     },
     vue: {
       target: "browser",
       preprocessStyles: process.env.SEP_CSS ? false : true,
-      postcssPlugins: [...postcssConfigList]
+      postcssPlugins: [...postcssConfigList],
     },
-    postVue: [
-      ...postVueConfig
-    ],
+    postVue: [...postVueConfig],
     babel: {
       exclude: "node_modules/**",
       extensions: [".js", ".jsx", ".vue"],
-      babelHelpers: "bundled"
-    }
-  }
+      babelHelpers: "bundled",
+    },
+  },
 };
 
 // ESM/UMD/IIFE shared settings: externals
@@ -119,7 +105,7 @@ const baseConfig = {
 const external = [
   // list external dependencies, exactly the way it is written in the import statement.
   // eg. 'jquery'
-  "vue"
+  "vue",
 ];
 
 // UMD/IIFE shared settings: output.globals
@@ -127,57 +113,65 @@ const external = [
 const globals = {
   // Provide global variable names to replace your external imports
   // eg. jquery: '$'
-  vue: "Vue"
+  vue: "Vue",
 };
 
 const baseFolder = "./src/";
 const componentsFolder = "components/";
 
-const components = fs
-  .readdirSync(baseFolder + componentsFolder)
-  .filter(f =>
-    fs.statSync(path.join(baseFolder + componentsFolder, f)).isDirectory()
-  );
+const findComponents = (type) => {
+  const compPath = `${baseFolder}${componentsFolder}/${type}/`;
+  return fs
+    .readdirSync(compPath)
+    .filter((f) => fs.statSync(path.join(compPath, f)).isDirectory());
+};
+const usgs = findComponents("USGS");
+const uswds = findComponents("USWDS");
 
 const entriespath = {
-  index: "./src/index.ts",
-  ...components.reduce((obj, name) => {
-    obj[name] = baseFolder + componentsFolder + name + "/index.ts";
+  index: "./src/index.js",
+  ...usgs.reduce((obj, name) => {
+    obj[name] = baseFolder + componentsFolder + "USGS/" + name + "/index.js";
     return obj;
-  }, {})
+  }, {}),
+  ...uswds.reduce((obj, name) => {
+    obj[name] = baseFolder + componentsFolder + "USWDS/" + name + "/index.js";
+    return obj;
+  }, {}),
 };
 
-const capitalize = s => {
+const capitalize = (s) => {
   if (typeof s !== "string") return "";
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
 let buildFormats = [];
 
-const mapComponent = name => {
+const mapComponent = (name, type) => {
+  const compPath = `${type}/${name}`;
   return [
     {
-      input: baseFolder + componentsFolder + `${name}/index.ts`,
+      input: baseFolder + componentsFolder + `${compPath}/index.js`,
       external,
       output: {
         format: "umd",
         name: capitalize(name),
-        file: `dist/components/${name}/index.ts`,
+        file: `dist/${compPath}/index.js`,
         exports: "named",
-        globals
+        globals,
       },
       plugins: [
-        typescript(),
         ...baseConfig.plugins.preVue,
         vue({}),
         ...baseConfig.plugins.postVue,
+        sass({ input: "./src/styles/styles.scss", output: "./dist/usgs.css" }),
         babel({
           ...baseConfig.plugins.babel,
-          presets: [["@babel/preset-env", { modules: false }]]
+          presets: [["@babel/preset-env", { modules: false }]],
         }),
-        commonjs()
-      ]
-    }
+        commonjs(),
+      ],
+    },
   ];
 };
 
@@ -187,110 +181,52 @@ if (!argv.format || argv.format === "es") {
     external,
     output: {
       format: "esm",
-      dir: "dist/esm"
+      dir: "dist/esm",
     },
     plugins: [
-      typescript(),
       replace(baseConfig.plugins.replace),
       ...baseConfig.plugins.preVue,
       vue(baseConfig.plugins.vue),
+      sass({ input: "./src/styles/styles.scss", output: "./dist/usgs.css" }),
       ...baseConfig.plugins.postVue,
       babel({
         ...baseConfig.plugins.babel,
-        presets: [["@babel/preset-env", { modules: false }]]
+        presets: [["@babel/preset-env", { modules: false }]],
       }),
       commonjs(),
-    ]
+    ],
   };
 
   const merged = {
-    input: "src/index.ts",
+    input: "src/index.js",
     external,
     output: {
       format: "esm",
-      file: "dist/vuelib.esm.js"
+      file: "dist/vuelib.esm.js",
     },
     plugins: [
-      typescript(),
       replace(baseConfig.plugins.replace),
       ...baseConfig.plugins.preVue,
       vue(baseConfig.plugins.vue),
       ...baseConfig.plugins.postVue,
       babel({
         ...baseConfig.plugins.babel,
-        presets: [["@babel/preset-env", { modules: false }]]
+        presets: [["@babel/preset-env", { modules: false }]],
       }),
       commonjs(),
-    ]
+    ],
   };
   const ind = [
-    ...components.map(f => mapComponent(f)).reduce((r, a) => r.concat(a), [])
+    ...usgs
+      .map((f) => mapComponent(f, "USGS"))
+      .reduce((r, a) => r.concat(a), []),
+    ...uswds
+      .map((f) => mapComponent(f, "USWDS"))
+      .reduce((r, a) => r.concat(a), []),
   ];
   buildFormats.push(esConfig);
   buildFormats.push(merged);
   buildFormats = [...buildFormats, ...ind];
 }
 
-if (!argv.format || argv.format === "iife") {
-  const unpkgConfig = {
-    ...baseConfig,
-    input: "./src/index.ts",
-    external,
-    output: {
-      compact: true,
-      file: "dist/vuelib-browser.min.js",
-      format: "iife",
-      name: "vuelib",
-      exports: "named",
-      globals
-    },
-    plugins: [
-      typescript(),
-      replace(baseConfig.plugins.replace),
-      ...baseConfig.plugins.preVue,
-      vue(baseConfig.plugins.vue),
-      ...baseConfig.plugins.postVue,
-      babel(baseConfig.plugins.babel),
-      commonjs(),
-      terser({
-        output: {
-          ecma: 5
-        }
-      })
-    ]
-  };
-  buildFormats.push(unpkgConfig);
-}
-
-if (!argv.format || argv.format === "cjs") {
-  const cjsConfig = {
-    ...baseConfig,
-    input: entriespath,
-    external,
-    output: {
-      compact: true,
-      format: "cjs",
-      dir: "dist/cjs",
-      exports: "named",
-      globals
-    },
-    plugins: [
-      typescript(),
-      replace(baseConfig.plugins.replace),
-      ...baseConfig.plugins.preVue,
-      vue({
-        ...baseConfig.plugins.vue,
-        template: {
-          ...baseConfig.plugins.vue.template,
-          optimizeSSR: true
-        }
-      }),
-      ...baseConfig.plugins.postVue,
-      babel(baseConfig.plugins.babel),
-      commonjs(),
-    ]
-  };
-  buildFormats.push(cjsConfig);
-}
-// Export config
 export default buildFormats;

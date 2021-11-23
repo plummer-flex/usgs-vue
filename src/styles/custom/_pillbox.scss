@@ -1,0 +1,31 @@
+.pills {
+  margin-bottom: 0;
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 95%;
+  }
+  .multi-select-pill {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+    background-color: #1478fc;
+    color: white;
+    border-radius: 0.5rem;
+    height: 1.5rem;
+    line-height: 1.5rem;
+    padding: 0 1.75rem 0 0.5rem;
+    margin: 5px;
+    .icon-close-svg {
+      fill: #d3daeb;
+      position: absolute;
+      right: 0.5rem;
+      height: 1rem;
+      width: 1rem;
+      line-height: 1.5rem;
+      margin-top: 0.25rem;
+    }
+  }
+}
