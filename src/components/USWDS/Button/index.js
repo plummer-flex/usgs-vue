@@ -1,3 +1,13 @@
-import Button from './Button.vue'
+import Button from "./Button.vue";
 
-export default Button
+import { registerComponent } from "./../../../utils/plugins";
+
+const Plugin = {
+  install(vue) {
+    registerComponent(vue, Button);
+  },
+};
+
+export default Plugin;
+
+export { Button };

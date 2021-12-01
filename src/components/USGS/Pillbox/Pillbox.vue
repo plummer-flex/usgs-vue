@@ -1,6 +1,6 @@
 <script>
 import { EventBus } from "@/event-bus";
-import { KEY_DELETE, KEY_BACKSPACE } from "@/commonKeyCodes";
+import { KEY_DELETE, KEY_BACKSPACE } from "@/utils/commonKeyCodes";
 import UsaIconClose from "@/components/USWDS/Icon/IconClose.vue";
 
 export default {
@@ -58,7 +58,7 @@ export default {
       if (document.activeElement) {
         var focussable = Array.prototype.filter.call(
           document.querySelectorAll(focussableElements),
-          function(element) {
+          function (element) {
             // check for visibility while always include the current activeElement
             return (
               element.offsetWidth > 0 ||

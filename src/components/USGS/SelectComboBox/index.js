@@ -1,3 +1,13 @@
-import Comp from "./SelectComboBox.vue";
+import SelectComboBox from "./SelectComboBox.vue";
 
-export default Comp;
+import { registerComponent } from "./../../../utils/plugins";
+
+const Plugin = {
+  install(vue) {
+    registerComponent(vue, SelectComboBox);
+  },
+};
+
+export default Plugin;
+
+export { SelectComboBox };

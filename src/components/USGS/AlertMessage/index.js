@@ -1,3 +1,13 @@
-import Comp from "./AlertMessage.vue";
+import AlertMessage from "./AlertMessage.vue";
 
-export default Comp;
+import { registerComponent } from "./../../../utils/plugins";
+
+const Plugin = {
+  install(vue) {
+    registerComponent(vue, AlertMessage);
+  },
+};
+
+export default Plugin;
+
+export { AlertMessage };

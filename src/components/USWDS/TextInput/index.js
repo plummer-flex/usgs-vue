@@ -1,3 +1,13 @@
-import Comp from './TextInput.vue'
+import TextInput from "./TextInput.vue";
 
-export default Comp
+import { registerComponent } from "./../../../utils/plugins";
+
+const Plugin = {
+  install(vue) {
+    registerComponent(vue, TextInput);
+  },
+};
+
+export default Plugin;
+
+export { TextInput };

@@ -1,5 +1,5 @@
 <script>
-import { Escapable } from "@/Escapable";
+import { Escapable } from "@/utils/Escapable";
 import UsaIconClose from "@/components/USWDS/Icon/IconClose.vue";
 
 export default {

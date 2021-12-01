@@ -1,3 +1,13 @@
-import Comp from './Select.vue'
+import Select from "./Select.vue";
 
-export default Comp
+import { registerComponent } from "./../../../utils/plugins";
+
+const Plugin = {
+  install(vue) {
+    registerComponent(vue, Select);
+  },
+};
+
+export default Plugin;
+
+export { Select };

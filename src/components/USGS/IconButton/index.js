@@ -1,3 +1,13 @@
-import Comp from "./IconButton.vue";
+import IconButton from "./IconButton.vue";
 
-export default Comp;
+import { registerComponent } from "./../../../utils/plugins";
+
+const Plugin = {
+  install(vue) {
+    registerComponent(vue, IconButton);
+  },
+};
+
+export default Plugin;
+
+export { IconButton };

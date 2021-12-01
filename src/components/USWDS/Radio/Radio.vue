@@ -11,7 +11,11 @@
         :checked="option.value === value"
         @input="handleInput"
       />
-      <label class="usa-radio__label" :value="option.value" :for="`${id}--${i}`">
+      <label
+        class="usa-radio__label"
+        :value="option.value"
+        :for="`${id}--${i}`"
+      >
         {{ option.label }}
       </label>
     </div>
@@ -19,9 +23,9 @@
 </template>
 <script>
 export default {
-  name: 'usa-radio-button',
-  emits: ['input'],
-  argTypes: { onSubmit: { action: 'submit' } },
+  name: "usa-radio-button",
+  emits: ["input"],
+  argTypes: { onSubmit: { action: "submit" } },
   props: {
     name: {
       type: String,
@@ -45,8 +49,8 @@ export default {
   },
   methods: {
     handleInput(event) {
-      this.$emit('input', event.target.value)
+      this.$emit("input", event.target.value);
     },
   },
-}
+};
 </script>

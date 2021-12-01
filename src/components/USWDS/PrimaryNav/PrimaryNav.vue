@@ -44,7 +44,7 @@
       }
  *
  */
-import { KEY_ENTER } from "@/commonKeyCodes";
+import { KEY_ENTER } from "@/utils/commonKeyCodes";
 
 export default {
   name: "usa-primary-nav",
@@ -127,7 +127,7 @@ export default {
       </li>
     </ul>
     <div
-      class="usa-search usa-search--small "
+      class="usa-search usa-search--small"
       v-for="(form, formIndex) in options.form"
       :key="formIndex"
       :role="form.role"

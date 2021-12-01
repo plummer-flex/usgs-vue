@@ -1,6 +1,6 @@
 <script>
 import { EventBus } from "@/event-bus";
-import { KEY_ENTER } from "@/commonKeyCodes";
+import { KEY_ENTER } from "@/utils/commonKeyCodes";
 
 export default {
   data() {

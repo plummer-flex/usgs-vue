@@ -1,13 +1,11 @@
-// iife/cjs usage extends esm default export - so import it all
-import plugin, * as components from "@/entry.esm";
+import * as components from "./components/index";
 
-// Attach named exports directly to plugin. IIFE/CJS will
-// only expose one global var, with component exports exposed as properties of
-// that global var (eg. plugin.component)
-Object.entries(components).forEach(([componentName, component]) => {
-  if (componentName !== "default") {
-    plugin[componentName] = component;
-  }
-});
+const install = (instance) => {
+  Object.values(components).forEach((component) => {
+    instance.use(component);
+  });
+};
 
-export default plugin;
+export default install;
+
+export * from "./components";

@@ -1,3 +1,13 @@
-import Comp from "./PillBox.vue";
+import Pillbox from "./Pillbox.vue";
 
-export default Comp;
+import { registerComponent } from "./../../../utils/plugins";
+
+const Plugin = {
+  install(vue) {
+    registerComponent(vue, Pillbox);
+  },
+};
+
+export default Plugin;
+
+export { Pillbox };

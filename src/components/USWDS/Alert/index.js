@@ -1,3 +1,13 @@
-import Alert from './Alert.vue'
+import Alert from "./Alert.vue";
 
-export default Alert
+import { registerComponent } from "./../../../utils/plugins";
+
+const Plugin = {
+  install(vue) {
+    registerComponent(vue, Alert);
+  },
+};
+
+export default Plugin;
+
+export { Alert };

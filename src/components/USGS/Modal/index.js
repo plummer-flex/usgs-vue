@@ -1,3 +1,13 @@
-import Comp from "./Modal.vue";
+import Modal from "./Modal.vue";
 
-export default Comp;
+import { registerComponent } from "./../../../utils/plugins";
+
+const Plugin = {
+  install(vue) {
+    registerComponent(vue, Modal);
+  },
+};
+
+export default Plugin;
+
+export { Modal };

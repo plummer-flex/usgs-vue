@@ -13,19 +13,19 @@ import minimist from "minimist";
 import postcssUrl from "postcss-url";
 import url from "@rollup/plugin-url";
 import nested from "postcss-nested";
-import { terser } from "rollup-plugin-terser";
 import autoprefixer from "autoprefixer";
-import sass from "rollup-plugin-sass";
+import scss from "rollup-plugin-scss";
+
+const argv = minimist(process.argv.slice(2));
+
+const projectRoot = path.resolve(__dirname, "..");
+
+const PATH_NODE_MODULES = path.resolve(projectRoot, "node_modules");
+const PATH_SRC = path.resolve(projectRoot, "src");
 
 const postcssConfigList = [
   postcssImport({
     resolve(id, basedir) {
-      // resolve alias @css, @import '@css/style.css'
-      // because @css/ has 5 chars
-      if (id.startsWith("@css")) {
-        return path.resolve("./src/styles", id.slice(5));
-      }
-
       // resolve node_modules, @import '~normalize.css/normalize.css'
       // similar to how css-loader's handling of node_modules
       if (id.startsWith("~")) {
@@ -44,10 +44,6 @@ const postcssConfigList = [
   }),
 ];
 
-const argv = minimist(process.argv.slice(2));
-
-const projectRoot = path.resolve(__dirname, ".");
-
 let postVueConfig = [
   // Process only `<style module>` blocks.
   PostCSS({
@@ -58,7 +54,7 @@ let postVueConfig = [
   }),
   // Process all `<style>` blocks except `<style module>`.
   PostCSS({
-    include: /(?<!&module=.*)\.css$/,
+    include: /(?<!&module=.*)\.scss$/,
     plugins: [...postcssConfigList],
   }),
   url({
@@ -164,7 +160,12 @@ const mapComponent = (name, type) => {
         ...baseConfig.plugins.preVue,
         vue({}),
         ...baseConfig.plugins.postVue,
-        sass({ input: "./src/styles/styles.scss", output: "./dist/usgs.css" }),
+        scss({
+          output: "dist/usgs.css",
+          outputStyle: "compressed",
+          include: ["src/styles/styles.scss"],
+          includePaths: [PATH_NODE_MODULES],
+        }),
         babel({
           ...baseConfig.plugins.babel,
           presets: [["@babel/preset-env", { modules: false }]],
@@ -187,7 +188,12 @@ if (!argv.format || argv.format === "es") {
       replace(baseConfig.plugins.replace),
       ...baseConfig.plugins.preVue,
       vue(baseConfig.plugins.vue),
-      sass({ input: "./src/styles/styles.scss", output: "./dist/usgs.css" }),
+      scss({
+        output: "dist/usgs.css",
+        outputStyle: "compressed",
+        include: ["src/styles/styles.scss"],
+        includePaths: [PATH_NODE_MODULES],
+      }),
       ...baseConfig.plugins.postVue,
       babel({
         ...baseConfig.plugins.babel,

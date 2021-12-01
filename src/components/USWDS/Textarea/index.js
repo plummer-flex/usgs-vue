@@ -1,3 +1,13 @@
-import Comp from './Textarea.vue'
+import Textarea from "./Textarea.vue";
 
-export default Comp
+import { registerComponent } from "./../../../utils/plugins";
+
+const Plugin = {
+  install(vue) {
+    registerComponent(vue, Textarea);
+  },
+};
+
+export default Plugin;
+
+export { Textarea };

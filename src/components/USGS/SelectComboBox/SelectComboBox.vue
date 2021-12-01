@@ -5,7 +5,7 @@ import {
   KEY_DOWN,
   KEY_SPACE,
   KEY_UP,
-} from "@/commonKeyCodes";
+} from "@/utils/commonKeyCodes";
 import PillBox from "@/components/USGS/Pillbox";
 import UsaIconSearch from "@/components/USWDS/Icon/IconSearch.vue";
 import { EventBus } from "@/event-bus";
@@ -108,20 +108,20 @@ export default {
         "--top-border-width": this.hideFilterTextbox ? "1px" : "0px",
       };
     },
-    cmpOptions: function() {
+    cmpOptions: function () {
       return this.options.filter((option) => {
         if (typeof option === "object") {
           return true;
         }
       });
     },
-    isSingleSelect: function() {
+    isSingleSelect: function () {
       return this.listType === "single";
     },
-    placeholderText: function() {
+    placeholderText: function () {
       return `Search ${this.placeholder}`;
     },
-    currentlySelectedText: function() {
+    currentlySelectedText: function () {
       return "label" in this.singleSelectedValue
         ? this.singleSelectedValue.label
         : "- Select -";
